@@ -7,7 +7,7 @@ The pipeline includes data phasing, file conversion, kinship matrix construction
 
 ## Pipeline Summary
 1. **Phasing_pipeline.R**: Splits data by chromosome and performs phasing using Eagle.
-2. **Haplotyping.R**: Converts phased `.haps` and `.sample` files to GHap format. Compresses and loads data, defines 1-SNP sliding haplotype blocks.
+2. **Haplotyping.R**: Converts phased `.haps` and `.sample` files to GHap format. Compresses and loads data, defines haplotype blocks.
 3. **Run_model.R**: Performs a single-step GBLUP analysis.
 4. **EBV_analysis.R**: Produces GEBVs (Genomic Estimated Breeding Values).
 5. **Validation_test.R**: Calculates the correlation between the predicted GEBVs and reference BLUPs (Breeding Values).
