@@ -14,6 +14,98 @@
 #   - Input PLINK data (with and without 400 animals)
 #   - EBV file (xlsx format)
 #############################################################
+# Environment preparation
+options(stringsAsFactors = FALSE)
+options(digits = 15)
+options(scipen = 999)
+rm(list = ls())  
+gc()  
+
+# Load necessary libraries
+library(GHap)
+library(openxlsx)
+library(ggplot2)
+library(ggExtra)
+
+# Load genotype data for all individuals
+plink_all <- ghap.loadplink("output")
+
+# Load filtered genotype data for a subset of individuals
+plink <- ghap.loadplink("out_filtered")
+
+# Load EBV data from Excel file
+ebv <- read.xlsx(xlsxFile = "ebv_all.xlsx", colNames = TRUE)
+ebv_gen <- ebv[which(ebv$IDA %in% plink$id), c(8, 5)]
+
+# Ensure that the IDs match between the EBV data and genotype data
+identical(as.numeric(ebv_gen$IDA), as.numeric(plink$id))
+
+# Order EBV data to match genotype data
+ebv_gen <- ebv_gen[order(match(ebv_gen$IDA, plink$id)), ]
+identical(as.numeric(ebv_gen$IDA), as.numeric(plink$id))
+
+# Extract reference BLUPs
+refblup <- ebv_gen$solBLUP
+names(refblup) <- ebv_gen$IDA
+
+# Plot the histogram of reference BLUPs
+hist(refblup)
+summary(refblup)
+
+# Calculate the kinship matrix
+K <- ghap.kinship(plink, ncores = 40)
+
+# Compute variance explained by each variant using GHap
+mkrblup <- ghap.varblup(object = plink, gebv = refblup, covmat = K, ncores = 30, verbose = TRUE)
+
+# Compute GEBVs using variant effects and compare with reference BLUPs
+gebv <- ghap.profile(object = plink, score = mkrblup, ncores = 40, verbose = TRUE)
+hist(gebv$SCORE)
+
+# Correlation test between predicted GEBVs and reference BLUPs for the subset
+cor.test(gebv$SCORE, refblup)
+plot(gebv$SCORE, refblup)
+abline(0, 1)
+
+# Calculate GEBVs for the full genotype dataset
+test_gebv <- ghap.profile(object = plink_all, score = mkrblup, ncores = 50, verbose = TRUE)
+
+# Load EBV data for all individuals
+ebv_gen_all <- ebv[which(ebv$IDA %in% plink_all$id), c(8, 5)]
+identical(as.numeric(ebv_gen_all$IDA), as.numeric(plink_all$id))
+ebv_gen_all <- ebv_gen_all[order(match(ebv_gen_all$IDA, plink_all$id)), ]
+identical(as.numeric(ebv_gen_all$IDA), as.numeric(plink_all$id))
+
+# Extract reference BLUPs for all individuals
+refblup_all <- ebv_gen_all$solBLUP
+names(refblup_all) <- ebv_gen_all$IDA
+
+# Correlation test for the full set of 4427 individuals
+cor(test_gebv$SCORE, refblup_all)
+plot(test_gebv$SCORE, refblup_all)
+abline(0, 1)
+
+# Merge GEBVs with EBVs for all individuals
+merged <- merge(test_gebv, ebv_gen_all, by.x = "ID", by.y = "IDA")
+
+# Load list of removed individuals (400 of interest)
+removed_ids <- read.table("remove_400.txt", header = FALSE, stringsAsFactors = FALSE)$V2
+removed_ids <- as.character(removed_ids)
+
+# Filter merged dataset for the 400 individuals of interest
+merged_400 <- merged[merged$ID %in% removed_ids, ]
+
+# Correlation for the 400 individuals of interest
+cor_400 <- cor(merged_400$SCORE, merged_400$solBLUP)
+print(cor_400)
+plot(merged_400$SCORE, merged_400$solBLUP)
+abline(0, 1)
+
+# Save workspace for future analysis
+save.image("env_400.RData")
+
+
+
 
 ### 1. Setup
 options(stringsAsFactors = FALSE)
