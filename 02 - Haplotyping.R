@@ -58,6 +58,7 @@ phase <- ghap.loadphase(
 ### 8. Generate blocks of 4 markers sliding 1 markers at a time
 blocks.mkr <- ghap.blockgen(phase, windowsize = 4, 
                             slide = 1, unit = "marker")
+# nsnp = numeric value for the minimum number of markers per block
 
 ### 9. Create haplotype genotype matrix
 ghap.haplotyping(
