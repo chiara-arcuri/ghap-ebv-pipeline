@@ -8,7 +8,6 @@
 #     - EBV variance partitioning on training set
 #     - Prediction of GEBVs for all animals (including test set)
 #     - Correlation analysis and visualization
-#
 # Requirements:
 #   - GHap, openxlsx
 #   - Input PLINK data (with and without 400 animals)
