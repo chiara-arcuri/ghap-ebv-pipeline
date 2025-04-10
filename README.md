@@ -14,7 +14,6 @@ The pipeline includes data phasing, file conversion, kinship matrix construction
 4. **EBV_analysis.R**: Produces GEBVs (Genomic Estimated Breeding Values).
 5. **Validation_test.R**: Calculates the correlation between the predicted GEBVs and reference BLUPs (Breeding Values).
 
-## Pipeline Summary
 
 
 
