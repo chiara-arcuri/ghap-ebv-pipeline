@@ -15,7 +15,7 @@ The pipeline includes data phasing, file conversion, kinship matrix construction
 5. **Validation_test.R**: Calculates the correlation between the predicted GEBVs and reference BLUPs (Breeding Values).
 
 ## Authors
-Chiara Arcuri - chiara.arcuri@unitus.it
+Chiara Arcuri - chiara.arcuri@unitus.it and 
 Marco Milanesi - marco.milanesi@unitus.it 
 
 
