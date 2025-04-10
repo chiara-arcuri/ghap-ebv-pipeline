@@ -57,7 +57,7 @@ sparse_mat <- sparseMatrix(
   j = col_indices,
   x = Hinv$V3,  # Values from the matrix
   symmetric = TRUE,
-  dimnames = list(common_levels, common_levels)  # Set row and column names
+  dimnames = list(common_levels, common_levels)  
 )
 
 # Display the sparse matrix
