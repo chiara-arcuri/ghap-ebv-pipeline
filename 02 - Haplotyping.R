@@ -55,11 +55,9 @@ phase <- ghap.loadphase(
   input.file = file.path(output_folder, "output")
 )
 
-### 8. Generate haplotype blocks (1 marker per block, sliding 1)
-blocks.mkr <- ghap.blockgen(
-  phase, windowsize = 1,
-  slide = 1, unit = "marker", nsnp = 1
-)
+### 8. Generate blocks of 4 markers sliding 1 markers at a time
+blocks.mkr <- ghap.blockgen(phase, windowsize = 4, 
+                            slide = 1, unit = "marker")
 
 ### 9. Create haplotype genotype matrix
 ghap.haplotyping(
